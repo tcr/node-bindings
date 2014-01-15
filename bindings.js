@@ -25,8 +25,8 @@ var fs = require('fs')
       , bindings: 'bindings.node'
       , try: [
           // shyp-compiled module
-          [ 'module_root', 'node_modules', require('../../package.json').name + '-shyp-' + process.platform + '-' + process.arch, getNodeModuleABI(), 'bindings' ]
-        , [ 'module_root', 'node_modules', require('../../package.json').name + '-shyp-' + process.platform + '-' + process.arch, 'bindings' ]
+          [ 'module_root', 'node_modules', 'shyp', getNodeModuleABI(), 'bindings' ]
+        , [ 'module_root', 'node_modules', 'shyp', 'bindings' ]
           // node-gyp's linked version in the "build" dir
         , [ 'module_root', 'build', 'bindings' ]
           // node-waf and gyp_addon (a.k.a node-gyp)
@@ -70,6 +70,9 @@ function bindings (opts) {
   if (path.extname(opts.bindings) != '.node') {
     opts.bindings += '.node'
   }
+
+  // shyp binding
+  opts.shyp = opts.shyp || require(path.join(opts.module_root, 'package.json')).name + '-shyp-' + process.platform + '-' + process.arch;
 
   var tries = []
     , i = 0
