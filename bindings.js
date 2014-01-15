@@ -16,8 +16,10 @@ var fs = require('fs')
       , version: process.versions.node
       , bindings: 'bindings.node'
       , try: [
+          // shyp-compiled module
+          [ 'module_root', 'node_modules', require('../../package.json').name + '-shyp-' + process.platform + '-' + process.arch, 'bindings' ]
           // node-gyp's linked version in the "build" dir
-          [ 'module_root', 'build', 'bindings' ]
+        , [ 'module_root', 'build', 'bindings' ]
           // node-waf and gyp_addon (a.k.a node-gyp)
         , [ 'module_root', 'build', 'Debug', 'bindings' ]
         , [ 'module_root', 'build', 'Release', 'bindings' ]
