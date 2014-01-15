@@ -3,6 +3,14 @@
  * Module dependencies.
  */
 
+// process.versions.modules added in >= v0.10.4 and v0.11.7
+// https://github.com/joyent/node/commit/ccabd4a6fa8a6eb79d29bc3bbe9fe2b6531c2d8e
+function getNodeModuleABI () {
+  return process.versions.modules
+    ? 'node-v' + (+process.versions.modules)
+    : 'v8-' + process.versions.v8.split('.').slice(0,2).join('.');
+}
+
 var fs = require('fs')
   , path = require('path')
   , join = path.join
@@ -17,7 +25,8 @@ var fs = require('fs')
       , bindings: 'bindings.node'
       , try: [
           // shyp-compiled module
-          [ 'module_root', 'node_modules', require('../../package.json').name + '-shyp-' + process.platform + '-' + process.arch, 'bindings' ]
+          [ 'module_root', 'node_modules', require('../../package.json').name + '-shyp-' + process.platform + '-' + process.arch, getNodeModuleABI(), 'bindings' ]
+        , [ 'module_root', 'node_modules', require('../../package.json').name + '-shyp-' + process.platform + '-' + process.arch, 'bindings' ]
           // node-gyp's linked version in the "build" dir
         , [ 'module_root', 'build', 'bindings' ]
           // node-waf and gyp_addon (a.k.a node-gyp)
